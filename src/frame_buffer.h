@@ -17,5 +17,5 @@ typedef struct {
 } frame_buffer_t;
 
 void frame_buffer_init(frame_buffer_t* frame_buffer, frame_buffer_type_t type, u32 width, u32 height);
-
+void frame_buffer_clear(frame_buffer_t* frame_buffer);
 #endif

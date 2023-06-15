@@ -8,7 +8,8 @@ set(VCPKG_ROOT "C:/Users/wolfg/dev/vcpkg")
 set(LIBRARY_PATH "${VCPKG_ROOT}/installed/x64-windows/lib")
 
 if (MSVC)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W2 /we4047")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4 /we4047")
+    set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /O2 /Ob2")
     set(CMAKE_TOOLCHAIN_FILE=${VCPG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 else()
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -Werror")   
@@ -22,6 +23,13 @@ add_executable(
     src/game_state.c
     src/color_palette.c
     src/frame_buffer.c
+    src/mge_math.c
+    src/recti.c
+    src/transform2d.c
+    src/gfxa.c
+    src/vec2f.c
+    src/vec2i.c
+    src/on_draw.c
 )
 
 target_link_libraries(

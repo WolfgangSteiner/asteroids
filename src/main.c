@@ -3,24 +3,29 @@
 #include "base_defines.h"
 #include "game_state.h"
 #include <stdlib.h>
+#include "gfxa.h"
+#include "transform2d.h"
+#include "vec2i.h"
 
-void render_frame_buffer(SDL_Surface* surface, frame_buffer_t* frame_buffer) {
+void on_draw(game_state_t* t);
+
+void render_frame_buffer(SDL_Surface* surface, frame_buffer_t* fb) {
     u32* dst = (u32*)surface->pixels;
     u32 pitch = surface->pitch / sizeof(u32);
 
-    if (frame_buffer->type == FRAME_BUFFER_INDEXED) {
-        for (int y = 0; y < frame_buffer->height; ++y) {
-            for (int x = 0; x < frame_buffer->width; ++x) {
-                u8 index = frame_buffer->data[y * frame_buffer->width + x];
-                color_rgba_t color = color_palette_map(&frame_buffer->palette, index);
+    if (fb->type == FRAME_BUFFER_INDEXED) {
+        for (u32 y = 0; y < fb->height; ++y) {
+            for (u32 x = 0; x < fb->width; ++x) {
+                u8 index = fb->data[y * fb->width + x];
+                color_rgba_t color = color_palette_map(&fb->palette, index);
                 dst[y * pitch + x] = color.rgba;
             }
         }
-    } else if (frame_buffer->type == FRAME_BUFFER_RGBA) {
-        u32* src = (u32*)frame_buffer->data;
-        for (int y = 0; y < frame_buffer->height; y++) {
-            for (int x = 0; x < frame_buffer->width; ++x) {
-                dst[y * pitch + x] = src[y * frame_buffer->width + x];
+    } else if (fb->type == FRAME_BUFFER_RGBA) {
+        u32* src = (u32*)fb->data;
+        for (u32 y = 0; y < fb->height; y++) {
+            for (u32 x = 0; x < fb->width; ++x) {
+                dst[y * pitch + x] = src[y * fb->width + x];
             }
         }
     }
@@ -32,18 +37,6 @@ u8 rand_u8() {
 }
 
 
-void on_draw(game_state_t* game_state) {
-    frame_buffer_t* fb = &game_state->frame_buffer;
-    color_palette_t* palette = &fb->palette;
-    u32 num_colors = palette->num_entries;
-    u8* data = fb->data;
-    for (int i = 0; i < 256 * 256; i++) {
-        u8 x = rand_u8();
-        u8 y = rand_u8();
-        u8 value = rand_u8();
-        data[y * fb->width + x] = value;
-    }
-}
 #define WINDOW_WIDTH 1024   
 #define WINDOW_HEIGHT 1024
 
@@ -57,7 +50,7 @@ int main(int argc, char** argv)
 
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Window *window = SDL_CreateWindow("ASTEROIDS", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);    
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_Surface* surface = SDL_CreateRGBSurface(0, WINDOW_WIDTH, WINDOW_HEIGHT, 32, 0, 0, 0, 0); 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 
@@ -83,7 +76,7 @@ int main(int argc, char** argv)
         SDL_RenderCopy(renderer, texture, &srcrect, &dstrect);
 
         SDL_RenderPresent(renderer);
-        SDL_Delay(15);
+        SDL_Delay(1);
     }
 
     SDL_Quit();

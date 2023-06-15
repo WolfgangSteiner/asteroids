@@ -15,3 +15,22 @@ void frame_buffer_init(frame_buffer_t* frame_buffer, frame_buffer_type_t type, u
         frame_buffer->data = calloc(width * height, sizeof(color_rgba_t));
     }
 }
+
+
+void frame_buffer_clear(frame_buffer_t* frame_buffer) {
+    u32 count = frame_buffer->width * frame_buffer->height;
+
+    if (frame_buffer->type == FRAME_BUFFER_INDEXED) {
+        u32 count_four = count / 4;
+        u32 count_remainder = count % 4;
+
+        u32* dst_four = (u32*) frame_buffer->data;
+        for (u32 i = 0; i < count_four; i++) *dst_four++ = 0x0;
+
+        u8* dst_remainder = frame_buffer->data;
+        for (u32 i = 0; i < count_remainder; i++) *dst_remainder++ = 0x0;
+    } else {
+        u32* dst = (u32*)frame_buffer->data;
+        for (u32 i = 0; i < count; ++i) *dst++ = 0x0;
+    }
+}
