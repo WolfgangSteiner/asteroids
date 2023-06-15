@@ -1,8 +1,8 @@
 #ifndef COLOR_PALETTE_H
 #define COLOR_PALETTE_H
 
-#include "base_defines.h"
-#include "color_rgba.h"
+#include "grv/base_defines.h"
+#include "grv/color_rgba.h"
 
 typedef struct {
     u32 num_entries;

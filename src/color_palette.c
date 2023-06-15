@@ -1,4 +1,4 @@
-#include "color_palette.h"
+#include "grv/color_palette.h"
 #include <stdlib.h>
 
 void color_palette_init(color_palette_t* palette, u32 num_entries) {

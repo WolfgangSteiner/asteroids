@@ -8,14 +8,14 @@ set(VCPKG_ROOT "C:/Users/wolfg/dev/vcpkg")
 set(LIBRARY_PATH "${VCPKG_ROOT}/installed/x64-windows/lib")
 
 if (MSVC)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4 /we4047")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4 /we4047 /we4013")
     set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /O2 /Ob2")
     set(CMAKE_TOOLCHAIN_FILE=${VCPG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 else()
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -Werror")   
 endif()
 
-include_directories(src)
+include_directories(include)
 
 add_executable(
     asteroids WIN32
@@ -23,7 +23,7 @@ add_executable(
     src/game_state.c
     src/color_palette.c
     src/frame_buffer.c
-    src/mge_math.c
+    src/math.c
     src/recti.c
     src/transform2d.c
     src/gfxa.c

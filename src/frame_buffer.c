@@ -1,4 +1,4 @@
-#include "frame_buffer.h"
+#include "grv/frame_buffer.h"
 #include <stdlib.h>
 
 void frame_buffer_init(frame_buffer_t* frame_buffer, frame_buffer_type_t type, u32 width, u32 height) {

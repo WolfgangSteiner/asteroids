@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include "SDL2/SDL.h"
-#include "base_defines.h"
-#include "game_state.h"
+#include "grv/base_defines.h"
+#include "grv/game_state.h"
 #include <stdlib.h>
-#include "gfxa.h"
-#include "transform2d.h"
-#include "vec2i.h"
+#include "grv/gfxa.h"
+#include "grv/transform2d.h"
+#include "grv/vec2i.h"
 
 void on_draw(game_state_t* t);
 

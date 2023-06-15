@@ -1,7 +1,7 @@
-#include "gfxa.h"
-#include "recti.h"
-#include "vec2f.h"
-#include "grv_math.h"
+#include "grv/gfxa.h"
+#include "grv/recti.h"
+#include "grv/vec2f.h"
+#include "grv/math.h"
 #include <math.h>
 #include <assert.h>
 

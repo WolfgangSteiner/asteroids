@@ -1,5 +1,5 @@
-#include "transform2d.h"
-#include "grv_math.h"
+#include "grv/transform2d.h"
+#include "grv/math.h"
 
 vec2i transform2d_translate(vec2i v, vec2i t) {
    return (vec2i){v.x + t.x, v.y + t.y}; 

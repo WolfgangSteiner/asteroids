@@ -1,5 +1,5 @@
-#include "grv_math.h"
-#include "math.h"
+#include <math.h>
+#include "grv/math.h"
 
 f32 unit_sin_f32(f32 arg) {
     return sinf(arg * TWO_PI_F32);
