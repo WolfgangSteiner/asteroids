@@ -348,8 +348,11 @@ void gfxa_fill_triangle_u8(frame_buffer_t* fb, vec2i p1, vec2i p2, vec2i p3, u8 
 
     for (s32 y = ymin; y <= ymax; ++y) {
         gfxa_fill_horizontal_span_clipped_u8(fb, y, round_f32(x1), round_f32(x2), color);
-        if (p2.y != p3.y && p1.y != p2.y && y == p2.y) { dx1dy = (f32)(p3.x - p2.x) / (f32)(p3.y - p2.y); }
-        else if (p2.y != p3.y && y == p3.y) { dx2dy = (f32)(p2.x - p3.x) / (f32)(p2.y - p3.y); }
+        if (p2.y != p3.y && p1.y != p2.y && y == p2.y) {
+            dx1dy = (f32)(p3.x - p2.x) / (f32)(p3.y - p2.y);
+        } else if (p2.y != p3.y && y == p3.y) {
+            dx2dy = (f32)(p2.x - p3.x) / (f32)(p2.y - p3.y);
+        }
         x1 += dx1dy;
         x2 += dx2dy;
     }
