@@ -310,6 +310,16 @@ void gfxa_fill_triangle_u8(frame_buffer_t* fb, vec2i p1, vec2i p2, vec2i p3, u8 
     s32 ymax = max_s32(p1.y, max_s32(p2.y, p3.y));
     if (xmax < 0 || xmin >= (s32)fb->width || ymax < 0 || ymin >= (s32)fb->height) return;
 
+    if (xmin == xmax) {
+        gfxa_fill_vertical_span_clipped_u8(fb, ymin, ymax, xmin, color);
+        return;
+    }
+    
+    if (ymin == ymax) {
+        gfxa_fill_horizontal_span_clipped_u8(fb, ymin, xmin, xmax, color);
+        return;
+    }
+
     // sort the points
     if (p2.y < p1.y) vec2i_swp(&p1, &p2);
     if (p3.y < p1.y) vec2i_swp(&p1, &p3);
