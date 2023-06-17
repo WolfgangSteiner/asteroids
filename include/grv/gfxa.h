@@ -9,6 +9,7 @@ void gfxa_draw_pixel_u8(frame_buffer_t* fb, vec2i p, u8 color);
 void gfxa_draw_pixels_u8(frame_buffer_t* fb, vec2i* points, u32 count, u8 color);
 
 void gfxa_draw_line_u8(frame_buffer_t* fb, vec2i p1, vec2i p2, u8 color);
+void gfxa_draw_lines_u8(frame_buffer_t* fb, vec2i* points, u32 count, u8 color, bool close_shape);
 
 void gfxa_fill_rect_u8(frame_buffer_t* fb, recti_t* r, u8 color);
 void gfxa_draw_rect_u8(frame_buffer_t* fb, recti_t* r, u8 color);

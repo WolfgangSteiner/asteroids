@@ -175,10 +175,25 @@ void gfxa_draw_line_u8(frame_buffer_t* fb, vec2i p1, vec2i p2, u8 color) {
     recti_t cr = {0, 0, fb->width, fb->height};
     bool visible = clip_line(&p1f, &p2f, cr);
     if (visible) {
-        gfxa_draw_line_u8_impl2(fb, p1f, p2f, color);
+        gfxa_draw_line_u8_impl3(fb, p1f, p2f, color);
     }
 }   
 
+void gfxa_draw_lines_u8(frame_buffer_t* fb, vec2i* points, u32 count, u8 color, bool close_shape) {
+    vec2i first_point = *points++;
+    vec2i current_point = first_point;
+    vec2i next_point = first_point; 
+    while (--count) {
+        current_point = next_point;
+        next_point = *points;
+        gfxa_draw_line_u8(fb, current_point, next_point, color);
+        points++;
+    }
+
+    if (close_shape) {
+        gfxa_draw_line_u8(fb, next_point, first_point, color);
+    }
+}
 
 void gfxa_fill_rect_u8(frame_buffer_t* fb, recti_t* r, u8 color) {
     s32 x1 = max_s32(recti_xmin(r), 0);
