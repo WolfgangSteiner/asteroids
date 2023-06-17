@@ -1,7 +1,7 @@
 #ifndef TRANSFORM2D_H
 #define TRANSFORM2D_H
 
-#include "vec2i.h"
+#include "grv/vec2i.h"
 
 typedef struct {
     f32 rotation;

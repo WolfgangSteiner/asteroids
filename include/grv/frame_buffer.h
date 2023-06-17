@@ -1,8 +1,8 @@
 #ifndef FRAME_BUFFER_H
 #define FRAME_BUFFER_H
 
-#include "base_defines.h"
-#include "color_palette.h"
+#include "grv/base_defines.h"
+#include "grv/color_palette.h"
 
 typedef enum {
     FRAME_BUFFER_INDEXED,

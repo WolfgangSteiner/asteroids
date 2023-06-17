@@ -1,8 +1,8 @@
 #ifndef GAME_STATE_H
 #define GAME_STATE_H
 
-#include "base_defines.h"
-#include "frame_buffer.h"
+#include "grv/base_defines.h"
+#include "grv/frame_buffer.h"
 
 typedef struct {
     frame_buffer_t frame_buffer;

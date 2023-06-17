@@ -1,9 +1,9 @@
 #ifndef GFXA_H
 #define GFXA_H
 
-#include "vec2i.h"
-#include "recti.h"
-#include "frame_buffer.h"
+#include "grv/vec2i.h"
+#include "grv/recti.h"
+#include "grv/frame_buffer.h"
 
 void gfxa_draw_pixel_u8(frame_buffer_t* fb, vec2i p, u8 color);
 void gfxa_draw_pixels_u8(frame_buffer_t* fb, vec2i* points, u32 count, u8 color);
