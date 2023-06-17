@@ -85,24 +85,47 @@ bool clip_line(vec2f* p1, vec2f* p2, recti_t cr) {
     return false;
 }
 
-
 static void gfxa_draw_line_u8_impl2(frame_buffer_t* fb, vec2f p1, vec2f p2, u8 color) {
-    vec2f diff = vec2f_abs(vec2f_sub(p2, p1));
+    vec2f diff = vec2f_sub(p2, p1);
 
     if (vec2f_is_zero(diff)) {
         gfxa_draw_pixel_u8(fb, vec2f_round(p1), color);
         return;
     }
 
-    f32 dist = vec2f_max_element(diff);
-    s32 N = (s32)dist;
-
-    for (int i = 0; i <= N; ++i) {
-        vec2i p = vec2f_round(vec2f_lerp(p1, p2, (f32)i / dist));
-        gfxa_draw_pixel_u8(fb, p, color);
+    f32 dist = vec2f_max_element(vec2f_abs(diff));
+    s32 count = (s32)dist + 1;
+    vec2f inc = vec2f_smul(diff, 1/dist);
+    vec2f p = p1;
+    
+    while(count--) {
+        vec2i p_i = vec2f_round(p);
+        gfxa_draw_pixel_u8(fb, p_i, color);
+        p = vec2f_add(p, inc);
     }
 }
 
+static void gfxa_draw_line_u8_impl3(frame_buffer_t* fb, vec2f p1, vec2f p2, u8 color) {
+    vec2f diff = vec2f_sub(p2, p1);
+
+    if (vec2f_is_zero(diff)) {
+        gfxa_draw_pixel_u8(fb, vec2f_round(p1), color);
+        return;
+    }
+
+    f32 dist = vec2f_max_element(vec2f_abs(diff));
+    s32 count = (s32)dist + 1;
+    s32 inc_x = (s32)(diff.x / dist * 256.0f);    
+    s32 inc_y = (s32)(diff.y / dist * 256.0f);    
+    s32 x = (s32)(p1.x * 256.0f);
+    s32 y = (s32)(p1.y * 256.0f);
+
+    while(count--) {
+        gfxa_draw_pixel_u8(fb, (vec2i){(x + 128) / 256, (y + 128) / 256}, color);
+        x += inc_x;
+        y += inc_y;
+    }
+}
 
 static void gfxa_draw_line_u8_impl(frame_buffer_t* fb, vec2f p1, vec2f p2, u8 color) {
     f32 dx = (p2.x - p1.x);
