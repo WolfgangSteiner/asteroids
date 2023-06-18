@@ -26,4 +26,6 @@ u64 dup_u8_u64(u8 a);
 
 f32 abs_f32(f32 a);
 
+void swp_s32(s32* a, s32* b);
+
 #endif

@@ -20,5 +20,5 @@ void on_draw(game_state_t* game_state) {
     gfxa_fill_triangle_u8(fb, points[0], points[1], points[2], 8);
     gfxa_draw_lines_u8(fb, points, num_points, 15, true);
     gfxa_draw_pixel_u8(fb, (vec2i){127,127}, 15);
-    angle += 1.0f / 180.0f;
+    angle += 0.5f / 360.0f;
 }
