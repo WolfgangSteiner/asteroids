@@ -24,6 +24,7 @@ include_directories(include)
 
 add_executable(
     asteroids WIN32
+    src/bitmap_font.c
     src/main.c
     src/game_state.c
     src/color_palette.c
