@@ -4,6 +4,7 @@
 #include "grv/math.h"
 #include <math.h>
 #include <assert.h>
+#include <string.h>
 
 void gfxa_draw_pixel_u8(frame_buffer_t* fb, vec2i p, u8 color) {
     if (p.x >= 0 && p.x < (s32)fb->width && p.y >= 0 && p.y < (s32)fb->height) {
@@ -254,20 +255,41 @@ void gfxa_fill_rect_u8(frame_buffer_t* fb, recti_t* r, u8 color) {
     }
 }
 
-void gfxa_fill_horizontal_span_clipped_u8(frame_buffer_t* fb, s32 y, s32 x1, s32 x2, u8 color) {
-    if (x2 < x1) swp_s32(&x1, &x2);
-    x1 = max_s32(x1, 0);
-    x2 = min_s32(x2, fb->width - 1);
+void gfxa_fill_horizontal_span_u8(frame_buffer_t* fb, s32 y, s32 x1, s32 x2, u8 color) {
+    assert(y >= 0 && y < (s32)fb->height);
+    assert(x1 >= 0 && x1 < (s32)fb->width);
+    assert(x2 >= 0 && x2 < (s32)fb->width);
+    assert(x1 <= x2);
     u32 count = x2 - x1 + 1;
-    u8* dst = fb->data + y * fb->width + x1;
+    u8* dst = frame_buffer_pixel_address_u8(fb, x1, y);
     memset(dst, color, count);
 }
 
-void gfxa_fill_vertical_span_clipped_u8(frame_buffer_t* fb, s32 y1, s32 y2, s32 x, u8 color) {
-    y1 = max_s32(0, y1);
-    y2 = min_s32(y2, fb->height - 1);
+void gfxa_fill_horizontal_span_wrapping_u8(frame_buffer_t* fb, s32 y, s32 x1, s32 x2, u8 color) {
+    if (x2 < x1) swp_s32(&x1, &x2);
+    x1 = x1 % fb->width;
+    x2 = x2 % fb->width;
+    y = y % fb->height;    
+
+    if (x1 < x2) {
+        u32 count = x2 - x1 + 1;
+        u8* dst = fb->data + y * fb->width + x1;
+        memset(dst, color, count);
+    } else if (x1 > x2) {
+        u32 count1 = fb->width - x1 + 1;
+        u32 count2 = x2 + 1;
+        u8* row_ptr = fb->data + y * fb->width;
+        memset(row_ptr + x1, color, count1);
+        memset(row_ptr, color, count2);
+    }
+}
+
+void gfxa_fill_vertical_span_u8(frame_buffer_t* fb, s32 y1, s32 y2, s32 x, u8 color) {
+    assert(x >= 0 && x < (s32)fb->width);
+    assert(y1 >= 0 && y1 < (s32)fb->height);
+    assert(y2 >= 0 && y2 < (s32)fb->height);
     s32 height = y2 - y1 + 1;
-    u8* dst = fb->data + y1 * fb->width + x;
+    u8* dst = frame_buffer_pixel_address_u8(fb, x, y1);
     for (int i = 0; i < height; i++) {
         *dst = color;
         dst += fb->width;
@@ -280,17 +302,24 @@ void gfxa_draw_rect_u8(frame_buffer_t* fb, recti_t* r, u8 color) {
     s32 ymin = recti_ymin(r);
     s32 ymax = recti_ymax(r);    
 
-    if (xmin >= (s32)fb->width || xmax < 0 || ymin >= (s32)fb->height || ymax < 0) {
+    recti_t cr = frame_buffer_get_clipping_rect(fb);
+
+    if (xmin >= cr.x + cr.w || xmax < cr.x || ymin >= cr.y + cr.h || ymax < cr.y) {
         return;
     }
     
-    if (ymin >= 0) gfxa_fill_horizontal_span_clipped_u8(fb, ymin, xmin, xmax, color);
-    if (ymax < (s32)fb->height) gfxa_fill_horizontal_span_clipped_u8(fb, ymax, xmin, xmax, color);
-    if (xmin >= 0) gfxa_fill_vertical_span_clipped_u8(fb, ymin, ymax, xmin, color);
-    if (xmax < (s32)fb->width) gfxa_fill_vertical_span_clipped_u8(fb, ymin, ymax, xmax, color);
+    s32 x1 = max_s32(xmin, cr.x);
+    s32 x2 = min_s32(xmax, cr.x + cr.w - 1);
+    s32 y1 = max_s32(ymin, cr.y);
+    s32 y2 = min_s32(ymax, cr.y + cr.h - 1);
+
+    if (ymin >= 0) gfxa_fill_horizontal_span_u8(fb, ymin, x1, x2, color);
+    if (ymax < (s32)fb->height) gfxa_fill_horizontal_span_u8(fb, ymax, x1, x2, color);
+    if (xmin >= 0) gfxa_fill_vertical_span_u8(fb, y1, y2, xmin, color);
+    if (xmax < (s32)fb->width) gfxa_fill_vertical_span_u8(fb, y1, y2, xmax, color);
 }
 
-void gfxa_fill_triangle_u8(frame_buffer_t* fb, vec2i p1, vec2i p2, vec2i p3, u8 color) {
+void gfxa_scan_convert_triangle(frame_buffer_t* fb, vec2i p1, vec2i p2, vec2i p3) {
     // sort the points
     if (p2.y < p1.y) vec2i_swp(&p1, &p2);
     if (p3.y < p1.y) vec2i_swp(&p1, &p3);
@@ -301,15 +330,19 @@ void gfxa_fill_triangle_u8(frame_buffer_t* fb, vec2i p1, vec2i p2, vec2i p3, u8 
     s32 ymin = p1.y;
     s32 ymax = p3.y;
 
+    frame_buffer_clear_span_buffer(fb);
+
     if (xmax < 0 || xmin >= (s32)fb->width || ymax < 0 || ymin >= (s32)fb->height) return;
 
     if (xmin == xmax) {
-        gfxa_fill_vertical_span_clipped_u8(fb, ymin, ymax, xmin, color);
+        for (s32 y = ymin; y <= ymax; ++y) {
+            frame_buffer_push_span(fb, y, xmin, xmax);
+        }
         return;
     }
     
     if (ymin == ymax) {
-        gfxa_fill_horizontal_span_clipped_u8(fb, ymin, xmin, xmax, color);
+        frame_buffer_push_span(fb, ymin, xmin, xmax);
         return;
     }
     
@@ -322,7 +355,7 @@ void gfxa_fill_triangle_u8(frame_buffer_t* fb, vec2i p1, vec2i p2, vec2i p3, u8 
         dx1dy = (p3.x - p1.x) * 256 / (p3.y - p1.y);
         dx2dy = (p3.x - p2.x) * 256 / (p3.y - p2.y);
         for (s32 y = ymin; y <= ymax; ++y) {
-            gfxa_fill_horizontal_span_clipped_u8(fb, y, (x1 + 128) / 256, (x2 + 128) / 256, color);
+            frame_buffer_push_span(fb, y, (x1 + 128) / 256, (x2 + 128) / 256);
             x1 += dx1dy;
             x2 += dx2dy;
         }
@@ -332,7 +365,7 @@ void gfxa_fill_triangle_u8(frame_buffer_t* fb, vec2i p1, vec2i p2, vec2i p3, u8 
 
         s32 y = ymin;
         for (; y < p2.y; y++) {
-            gfxa_fill_horizontal_span_clipped_u8(fb, y, (x1 + 128) / 256, (x2 + 128) / 256, color);
+            frame_buffer_push_span(fb, y, (x1 + 128) / 256, (x2 + 128) / 256);
             x1 += dx1dy;
             x2 += dx2dy;
         }
@@ -341,10 +374,55 @@ void gfxa_fill_triangle_u8(frame_buffer_t* fb, vec2i p1, vec2i p2, vec2i p3, u8 
             dx1dy = 256 * (p3.x - p2.x) / (p3.y - p2.y);
             
             for (; y <= ymax; y++) {
-                gfxa_fill_horizontal_span_clipped_u8(fb, y, (x1 + 128) / 256, (x2 + 128) / 256, color);
+                frame_buffer_push_span(fb, y, (x1 + 128) / 256, (x2 + 128) / 256);
                 x1 += dx1dy;
                 x2 += dx2dy;
             }
         }
     }
 } 
+
+void gfxa_fill_triangle_u8(frame_buffer_t* fb, vec2i p1, vec2i p2, vec2i p3, u8 color) {
+    gfxa_scan_convert_triangle(fb, p1, p2, p3);
+    if (fb->use_clipping) {
+        gfxa_fill_spans_clipped_u8(fb, color);
+    } else {
+        gfxa_fill_spans_wrapped_u8(fb, color);
+    }
+}
+
+void gfxa_fill_spans_clipped_u8(frame_buffer_t* fb, u8 color) {
+    grv_span_buffer_t* spans = &fb->span_buffer;
+    if (spans->count == 0) return;
+
+    s32 y1 = spans->y_start;
+    s32 y2 = y1 + spans->count - 1;
+
+    recti_t clip_rect = frame_buffer_get_clipping_rect(fb);
+    s32 xmin = recti_xmin(&clip_rect);
+    s32 xmax = recti_xmax(&clip_rect);
+    s32 ymin = recti_ymin(&clip_rect);
+    s32 ymax = recti_ymax(&clip_rect);
+
+    if (y2 < ymin || y1 > ymax) return;
+
+    y1 = max_s32(y1, ymin);
+    y2 = min_s32(y2, ymax);    
+
+    s32 idx = y1 - spans->y_start;
+    s32 count_y = y2 - y1 + 1;
+    grv_span_t* span = spans->spans + idx;
+    u8* row_ptr = frame_buffer_pixel_address_u8(fb, 0, y1);
+
+    while(count_y--) {
+        s32 x1 = max_s32(span->x1, xmin);
+        s32 x2 = min_s32(span->x2, xmax);
+        s32 count_x = x2 - x1 + 1;
+        memset(row_ptr + x1, color, count_x);
+        row_ptr += fb->width;
+        span++;
+    }    
+}
+
+void gfxa_fill_spans_wrapped_u8(frame_buffer_t* fb, u8 color) {
+}
