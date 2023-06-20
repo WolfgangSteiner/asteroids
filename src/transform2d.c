@@ -1,5 +1,6 @@
 #include "grv/transform2d.h"
 #include "grv/math.h"
+#include "grv/vec2f.h"
 
 vec2i transform2d_translate(vec2i v, vec2i t) {
    return (vec2i){v.x + t.x, v.y + t.y}; 
@@ -14,21 +15,22 @@ vec2i transform2d(transform2d_t* transform, vec2i v) {
     f32 cosv = unit_cos_f32(r) * s;
     f32 sinv = unit_sin_f32(r) * s;
 
-    vec2i res;
+    vec2f res;
     res.x = cosv * v.x - sinv * v.y + t.x;
     res.y = sinv * v.x + cosv * v.y + t.y;
 
-    return res;
+    return vec2f_round(res);
 }
 
 vec2i transform2d_rotate(vec2i v, f32 rotation) {
     const f32 cosv = unit_cos_f32(rotation);
     const f32 sinv = unit_sin_f32(rotation);
 
-    f32 x = cosv * v.x - sinv * v.y;
-    f32 y = sinv * v.x + cosv * v.y;    
+    vec2f res;
+    res.x = cosv * v.x - sinv * v.y;
+    res.y = sinv * v.x + cosv * v.y;    
 
-    return (vec2i) { (s32)(x + 0.5f), (s32)(y + 0.5f) };
+    return vec2f_round(res);
 }
 
 vec2i transform2d_scale(vec2i v, f32 scale) {
@@ -49,9 +51,9 @@ void transform2d_apply_array(transform2d_t* transform, vec2i* points, size_t cou
 
     while (count--) {
         vec2i v = *points;
-        vec2i res;
+        vec2f res;
         res.x = cosv * v.x - sinv * v.y + t.x;
         res.y = sinv * v.x + cosv * v.y + t.y;
-        *points++ = res;
+        *points++ = vec2f_round(res);
     }
 }
