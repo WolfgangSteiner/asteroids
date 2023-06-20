@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "SDL2/SDL.h"
-#include "grv/base_defines.h"
+#include "grv/common.h"
 #include "grv/game_state.h"
 #include <stdlib.h>
 #include "grv/gfxa.h"

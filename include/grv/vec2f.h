@@ -1,7 +1,7 @@
 #ifndef VEC2F_H
 #define VEC2F_H
 
-#include "grv/base_defines.h"
+#include "grv/common.h"
 
 struct vec2i_s;
 

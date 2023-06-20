@@ -1,7 +1,7 @@
-#ifndef MGE_MATH_H
-#define MGE_MATH_H
+#ifndef GRV_MATH_H
+#define GRV_MATH_H
 
-#include "grv/base_defines.h"
+#include "grv/common.h"
 
 #define PI_F32  3.141592653589793f
 #define TWO_PI_F32 (2.0f * PI_F32)

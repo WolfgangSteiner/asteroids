@@ -1,7 +1,7 @@
 #ifndef GAME_STATE_H
 #define GAME_STATE_H
 
-#include "grv/base_defines.h"
+#include "grv/common.h"
 #include "grv/frame_buffer.h"
 
 typedef struct {

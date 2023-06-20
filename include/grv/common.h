@@ -1,5 +1,5 @@
-#ifndef BASE_DEFINES_H
-#define BASE_DEFINES_H
+#ifndef GRV_COMMON_H
+#define GRV_COMMON_H
 
 #include <stdint.h>
 #include <stdbool.h>

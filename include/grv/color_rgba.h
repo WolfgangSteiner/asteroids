@@ -1,7 +1,7 @@
 #ifndef COLOR_RGBA_H
 #define COLOR_RGBA_H
 
-#include "grv/base_defines.h"
+#include "grv/common.h"
 
 typedef union {
     struct {
