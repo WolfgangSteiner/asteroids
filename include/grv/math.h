@@ -9,6 +9,8 @@
 f32 unit_sin_f32(f32 arg);
 f32 unit_cos_f32(f32 arg);
 
+f32 sqr_f32(f32 a);
+
 s32 round_f32(f32 a);
 f32 lerp_f32(f32 a, f32 b, f32 t);
 

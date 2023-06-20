@@ -9,7 +9,9 @@ f32 unit_cos_f32(f32 arg) {
     return cosf(arg * TWO_PI_F32);
 }
 
-s32 round_f32(f32 a) { return (s32)(a + 0.5f); };
+f32 sqr_f32(f32 a) { return a * a; }
+
+s32 round_f32(f32 a) { return (s32)roundf(a); };
 f32 lerp_f32(f32 a, f32 b, f32 t) { return a + t * (b - a); }
 
 s32 min_s32(s32 a, s32 b) { return a < b ? a : b; }

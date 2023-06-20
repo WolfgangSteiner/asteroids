@@ -9,7 +9,7 @@ f32 vec2f_min_element(vec2f a) { return min_f32(a.x, a.y); }
 vec2f vec2f_add(vec2f a, vec2f b) { return (vec2f){a.x + b.x, a.y + b.y}; }
 vec2f vec2f_sub(vec2f a, vec2f b) { return (vec2f){a.x - b.x, a.y - b.y}; }
 vec2f vec2f_smul(vec2f a, f32 b) { return (vec2f){a.x * b, a.y * b}; }
-vec2i vec2f_round(vec2f a) { return (vec2i){(s32)(a.x + 0.5f), (s32)(a.y + 0.5f)}; }
+vec2i vec2f_round(vec2f a) { return (vec2i){round_f32(a.x), round_f32(a.y)}; }
 
 vec2f vec2f_rot(vec2f a, f32 rot) {
     f32 sinv = unit_sin_f32(rot);
