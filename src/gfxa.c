@@ -350,35 +350,27 @@ void gfxa_scan_convert_triangle(frame_buffer_t* fb, vec2i p1, vec2i p2, vec2i p3
     s32 x2 = x1;
     s32 dx1dy = 0;
     s32 dx2dy = 0;
+    s32 y_end = 0;
     if (p1.y == p2.y) {
         x2 = p2.x * 256;
+        y_end = p3.y;
         dx1dy = (p3.x - p1.x) * 256 / (p3.y - p1.y);
         dx2dy = (p3.x - p2.x) * 256 / (p3.y - p2.y);
-        for (s32 y = ymin; y <= ymax; ++y) {
-            frame_buffer_push_span(fb, y, (x1 + 128) / 256, (x2 + 128) / 256);
-            x1 += dx1dy;
-            x2 += dx2dy;
-        }
     } else {
+        y_end = p2.y;
         dx1dy = (p2.x - p1.x) * 256 / (p2.y - p1.y);
         dx2dy = (p3.x - p1.x) * 256 / (p3.y - p1.y);
-
-        s32 y = ymin;
-        for (; y < p2.y; y++) {
-            frame_buffer_push_span(fb, y, (x1 + 128) / 256, (x2 + 128) / 256);
-            x1 += dx1dy;
-            x2 += dx2dy;
-        }
-
-        if (y < ymax) {
+    }
+    
+    s32 y = ymin;
+    while (y <= ymax) {
+        frame_buffer_push_span(fb, y, (x1 + 128) / 256, (x2 + 128) / 256);
+        if (y == y_end && y != ymax) {
             dx1dy = 256 * (p3.x - p2.x) / (p3.y - p2.y);
-            
-            for (; y <= ymax; y++) {
-                frame_buffer_push_span(fb, y, (x1 + 128) / 256, (x2 + 128) / 256);
-                x1 += dx1dy;
-                x2 += dx2dy;
-            }
         }
+        x1 += dx1dy;
+        x2 += dx2dy;
+        y++;
     }
 } 
 
