@@ -8,13 +8,13 @@ vec2i transform2d_translate(vec2i v, vec2i t) {
 
 
 vec2i transform2d(transform2d_t* transform, vec2i v) {
-    const f32 r = transform->rotation;
+    const u16 r = transform->rotation;
     const f32 s = transform->scale;
     const vec2i t = transform->translation;
 
-    f32 cosv = unit_cos_f32(r) * s;
-    f32 sinv = unit_sin_f32(r) * s;
-
+    sin_cos_t sc = unit_sin_cos_lut_u16(r);
+    const f32 cosv = sc.cos * s;
+    const f32 sinv = sc.sin * s;
     vec2f res;
     res.x = cosv * v.x - sinv * v.y + t.x;
     res.y = sinv * v.x + cosv * v.y + t.y;
@@ -22,13 +22,12 @@ vec2i transform2d(transform2d_t* transform, vec2i v) {
     return vec2f_round(res);
 }
 
-vec2i transform2d_rotate(vec2i v, f32 rotation) {
-    const f32 cosv = unit_cos_f32(rotation);
-    const f32 sinv = unit_sin_f32(rotation);
+vec2i transform2d_rotate(vec2i v, u16 rotation) {
+    sin_cos_t sc = unit_sin_cos_lut_u16(rotation);
 
     vec2f res;
-    res.x = cosv * v.x - sinv * v.y;
-    res.y = sinv * v.x + cosv * v.y;    
+    res.x = sc.cos * v.x - sc.sin * v.y;
+    res.y = sc.sin * v.x + sc.cos * v.y;    
 
     return vec2f_round(res);
 }
@@ -46,8 +45,9 @@ void transform2d_apply_array(transform2d_t* transform, vec2i* points, size_t cou
     const f32 s = transform->scale;
     const vec2i t = transform->translation;
 
-    f32 cosv = unit_cos_f32(r) * s;
-    f32 sinv = unit_sin_f32(r) * s;
+    sin_cos_t sc = unit_sin_cos_lut_u16(r);
+    const f32 cosv = sc.cos * s;
+    const f32 sinv = sc.sin * s;
 
     while (count--) {
         vec2i v = *points;

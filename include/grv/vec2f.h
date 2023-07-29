@@ -11,12 +11,16 @@ typedef struct {
 
 bool vec2f_is_zero(vec2f a);
 vec2f vec2f_abs(vec2f a);
+f32 vec2f_norm2(vec2f a);
+f32 vec2f_norm2_sq(vec2f a)
 f32 vec2f_max_element(vec2f a);
 f32 vec2f_min_element(vec2f a);
 
 vec2f vec2f_add(vec2f a, vec2f b);
 vec2f vec2f_sub(vec2f a, vec2f b);
 vec2f vec2f_smul(vec2f a, f32 b);
+
+f32 vec2f_inner(vec2f a, vec2f b);
 
 // rotate a vector, rot is fraction of unit circle
 vec2f vec2f_rot(vec2f a, f32 rot);

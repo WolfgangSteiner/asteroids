@@ -9,7 +9,7 @@
 
 
 void on_draw(game_state_t* game_state) {
-    static f32 angle = 0.0f;
+    static u16 angle = 0;
     frame_buffer_t* fb = &game_state->frame_buffer;
     vec2i points[] = {{0, 15}, {-5, -10}, {5, -10}};
     const u32 num_points = sizeof(points) / sizeof(vec2i);
@@ -24,8 +24,7 @@ void on_draw(game_state_t* game_state) {
     gfxa_fill_triangle_u8(fb, points[0], points[1], points[2], 8);
     gfxa_draw_lines_u8(fb, points, num_points, 15, true);
     gfxa_draw_pixel_u8(fb, (vec2i){127,127}, 15);
-    angle += 0.5f / 360.0f;
-    while (angle > 1.0f) angle -= 1.0f;
+    angle = (angle + 16) & 0xfff;
 
     char* text = "Hello World!";
     vec2i text_size = grv_bitmap_font_calc_size(NULL, text);

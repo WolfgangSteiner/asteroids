@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
-
 project(asteroids)
+enable_testing()
 
 set(CMAKE_C_STANDARD 99)
 
@@ -20,7 +20,8 @@ else()
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -Werror")   
 endif()
 
-include_directories(include)
+set(GRV_DIR c:/users/wolfg/dev/grv)
+include_directories(include ${GRV_DIR}/include)
 
 add_executable(
     asteroids WIN32
@@ -44,3 +45,14 @@ target_link_libraries(
     ${LIBRARY_PATH}/SDL2.lib
     ${LIBRARY_PATH}/manual-link/SDL2main.lib
 )
+
+
+add_executable(
+    test_math
+    test/test_math.c
+    src/math.c
+    ${GRV_DIR}/src/grv_str.c
+    ${GRV_DIR}/src/grv_strarr.c
+)
+
+add_test(NAME test_math COMMAND test_math)
