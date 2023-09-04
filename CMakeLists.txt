@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(asteroids)
 enable_testing()
 
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD 11)
 
 set(VCPKG_ROOT "C:/Users/wolfg/dev/vcpkg")
 set(LIBRARY_PATH "${VCPKG_ROOT}/installed/x64-windows/lib")
@@ -17,10 +17,10 @@ if (MSVC)
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /LTCG")
     set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /LTCG")
 else()
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -Werror")   
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -Werror -Wno-unused-function")   
 endif()
 
-set(GRV_DIR c:/users/wolfg/dev/grv)
+set(GRV_DIR ../grv)
 include_directories(include ${GRV_DIR}/include)
 
 add_executable(
@@ -30,29 +30,24 @@ add_executable(
     src/game_state.c
     src/color_palette.c
     src/frame_buffer.c
-    src/math.c
     src/recti.c
     src/transform2d.c
     src/gfxa.c
     src/vec2f.c
     src/vec2i.c
     src/on_draw.c
+    ${GRV_DIR}/src/grv.c
 )
 
-target_link_libraries(
-    asteroids
-    SDL2.lib
-    ${LIBRARY_PATH}/SDL2.lib
-    ${LIBRARY_PATH}/manual-link/SDL2main.lib
-)
+if (WIN32)
+    target_link_libraries(
+        asteroids
+        SDL2.lib
+        ${LIBRARY_PATH}/SDL2.lib
+        ${LIBRARY_PATH}/manual-link/SDL2main.lib)
+else()
+    target_link_libraries(
+        asteroids m
+        SDL2)
+endif()
 
-
-add_executable(
-    test_math
-    test/test_math.c
-    src/math.c
-    ${GRV_DIR}/src/grv_str.c
-    ${GRV_DIR}/src/grv_strarr.c
-)
-
-add_test(NAME test_math COMMAND test_math)

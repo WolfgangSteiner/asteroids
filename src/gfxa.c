@@ -137,17 +137,15 @@ static void gfxa_draw_line_u8_impl(frame_buffer_t* fb, vec2f p1, vec2f p2, u8 co
         s32 y = (s32)(p1.y + 0.5f);
         fb->data[y * fb->width + x] = color;
     } else if (fabs(dx) > fabs(dy)) {
-        f32 x1, x2, y1, y2;
+        f32 x1, x2, y1;
         if (p1.x < p2.x) {
             x1 = p1.x;
             x2 = p2.x;
             y1 = p1.y;
-            y2 = p2.y;
         } else {
             x1 = p2.x;
             x2 = p1.x;
             y1 = p2.y;
-            y2 = p1.y;
             dx *= -1.0f;
             dy *= -1.0f;
         }        
@@ -163,15 +161,13 @@ static void gfxa_draw_line_u8_impl(frame_buffer_t* fb, vec2f p1, vec2f p2, u8 co
             y += dydx;
         }
     } else {
-        f32 x1, x2, y1, y2;
+        f32 x1, y1, y2;
         if (p1.y < p2.y) {
             x1 = p1.x;
-            x2 = p2.x;
             y1 = p1.y;
             y2 = p2.y;
         } else {
             x1 = p2.x;
-            x2 = p1.x;
             y1 = p2.y;
             y2 = p1.y;
             dx *= -1.0f;
@@ -417,4 +413,6 @@ void gfxa_fill_spans_clipped_u8(frame_buffer_t* fb, u8 color) {
 }
 
 void gfxa_fill_spans_wrapped_u8(frame_buffer_t* fb, u8 color) {
+    (void) fb;
+    (void) color;
 }

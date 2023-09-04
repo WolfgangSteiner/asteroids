@@ -1,7 +1,7 @@
 #ifndef RECTI_H
 #define RECTI_H
 
-#include "grv/common.h"
+#include "grv/grv_base.h"
 
 typedef struct {
    s32 x, y, w, h;

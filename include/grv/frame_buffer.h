@@ -1,7 +1,7 @@
 #ifndef FRAME_BUFFER_H
 #define FRAME_BUFFER_H
 
-#include "grv/common.h"
+#include "grv/grv_base.h"
 #include "grv/color_palette.h"
 #include "grv/recti.h"
 

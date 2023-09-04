@@ -1,6 +1,7 @@
 #include "grv/vec2f.h"
 #include "grv/vec2i.h"
-#include "grv/math.h"
+#include "grv/grv_common.h"
+#include "grv/grv_math.h"
 
 bool vec2f_is_zero(vec2f a) { return a.x == 0.0f && a.y == 0.0f; }
 vec2f vec2f_abs(vec2f a) { return (vec2f){abs_f32(a.x), abs_f32(a.y)}; }

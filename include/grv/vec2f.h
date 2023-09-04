@@ -1,7 +1,7 @@
 #ifndef VEC2F_H
 #define VEC2F_H
 
-#include "grv/common.h"
+#include "grv/grv_base.h"
 
 struct vec2i_s;
 
@@ -12,7 +12,7 @@ typedef struct {
 bool vec2f_is_zero(vec2f a);
 vec2f vec2f_abs(vec2f a);
 f32 vec2f_norm2(vec2f a);
-f32 vec2f_norm2_sq(vec2f a)
+f32 vec2f_norm2_sq(vec2f a);
 f32 vec2f_max_element(vec2f a);
 f32 vec2f_min_element(vec2f a);
 

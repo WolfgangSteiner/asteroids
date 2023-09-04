@@ -7,7 +7,7 @@ void grv_clipping_stack_init(grv_clipping_stack_t* stack) {
     stack->stack = NULL;
     stack->capacity = 0L;
     stack->size = 0L;
-};
+}
 
 void grv_clipping_stack_push(grv_clipping_stack_t* stack, recti_t rect) {
     if (stack->stack == NULL) {
@@ -80,8 +80,8 @@ recti_t frame_buffer_get_clipping_rect(frame_buffer_t* fb) {
 }
 
 u8* frame_buffer_pixel_address_u8(frame_buffer_t* fb, s32 x, s32 y) {
-    assert(x >= 0 && x < fb->width);
-    assert(y >= 0 && y < fb->height);
+    assert(x >= 0 && (u32)x < fb->width);
+    assert(y >= 0 && (u32)y < fb->height);
     return fb->data + y * fb->width + x;
 }
 

@@ -1,7 +1,7 @@
 #ifndef COLOR_PALETTE_H
 #define COLOR_PALETTE_H
 
-#include "grv/common.h"
+#include "grv/grv_base.h"
 #include "grv/color_rgba.h"
 
 typedef struct {
