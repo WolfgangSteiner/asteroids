@@ -1,6 +1,7 @@
 #include "grv/bitmap_font.h"
 #include "grv/gfxa.h"
-#include "grv/math.h"
+#include "grv/grv_common.h"
+#include "grv/grv_math.h"
 #include <string.h>
 #include "basic_font_8x8_impl.c"
 

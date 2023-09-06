@@ -1,5 +1,6 @@
 #include "grv/frame_buffer.h"
-#include "grv/math.h"
+#include "grv/grv_common.h"
+#include "grv/grv_math.h"
 #include <stdlib.h>
 #include <assert.h>
 

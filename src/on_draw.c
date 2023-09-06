@@ -1,7 +1,7 @@
 #include "grv/game_state.h"
 #include "grv/transform2d.h"
 #include "grv/gfxa.h"
-#include "grv/math.h"
+#include "grv/grv_math.h"
 #include "SDL2/SDL.h"
 #include "grv/bitmap_font.h"
 #include <string.h>

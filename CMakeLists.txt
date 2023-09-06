@@ -33,8 +33,6 @@ add_executable(
     src/recti.c
     src/transform2d.c
     src/gfxa.c
-    src/vec2f.c
-    src/vec2i.c
     src/on_draw.c
     ${GRV_DIR}/src/grv.c
 )
